@@ -29,15 +29,15 @@ async function scrape(url, cont) {
 	let product_id = "";
 	let filename = "";
 
-	if (cont == false) {
+	if (cont == undefined || cont == false) {
 		let url_parts = url.split('/');
 		product_id = url_parts[4] == "dp" || url_parts[4] == "product" ? url_parts[5] : url_parts[4];
 		base_url = "https://www.amazon.in/product-reviews/" + product_id + "/?pageSize=20";
 	} else {
 		base_url = "https://www.amazon.in" + url;
 		product_id = url.split("/")[3];
-		filename = product_id + ".csv";
 	}
+	filename = product_id + ".csv";
 
 	console.log("Base URL: " + base_url);
 
