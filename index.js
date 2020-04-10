@@ -26,9 +26,11 @@ function preprocess(html) {
 async function scrape(url) {
 
 	let url_parts = url.split('/');
-	let product_id = url_parts[4] == "dp" ? url_parts[5] : url_parts[4]
+	let product_id = url_parts[4] == "dp" || url_parts[4] == "product" ? url_parts[5] : url_parts[4]
 	let base_url = "https://www.amazon.in/product-reviews/" + product_id + "/?pageSize=20";
 	let filename = product_id + ".csv";
+
+	console.log("Base URL: " + base_url);
 
 	let reviews = [];
 
@@ -75,7 +77,7 @@ async function scrape(url) {
 		}
 		console.log(next_page);
 
-		await wait(800);
+		await wait(parseInt(Math.random() * (1300 - 800) + 800));
 	}
 
 }
