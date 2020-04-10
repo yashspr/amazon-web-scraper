@@ -23,12 +23,21 @@ function preprocess(html) {
 	return html.replace(/<br>|<\/br>|<br\/>/g, "\n");
 }
 
-async function scrape(url) {
+async function scrape(url, cont) {
 
-	let url_parts = url.split('/');
-	let product_id = url_parts[4] == "dp" || url_parts[4] == "product" ? url_parts[5] : url_parts[4]
-	let base_url = "https://www.amazon.in/product-reviews/" + product_id + "/?pageSize=20";
-	let filename = product_id + ".csv";
+	let base_url = "";
+	let product_id = "";
+	let filename = "";
+
+	if (cont == false) {
+		let url_parts = url.split('/');
+		product_id = url_parts[4] == "dp" || url_parts[4] == "product" ? url_parts[5] : url_parts[4];
+		base_url = "https://www.amazon.in/product-reviews/" + product_id + "/?pageSize=20";
+	} else {
+		base_url = "https://www.amazon.in" + url;
+		product_id = url.split("/")[3];
+		filename = product_id + ".csv";
+	}
 
 	console.log("Base URL: " + base_url);
 
@@ -83,6 +92,6 @@ async function scrape(url) {
 }
 
 rl.question('Enter the URL of the product: ', (url) => {
-	scrape(url);
+	scrape(url.split(" ")[0], url.split(" ")[1]);
 	rl.close();
 });
