@@ -1,7 +1,13 @@
 const cheerio = require('cheerio');
 const axios = require('axios');
 const fs = require('fs');
+const readline = require('readline');
 const stringify = require('csv-stringify/lib/sync');
+
+const rl = readline.createInterface({
+	input: process.stdin,
+	output: process.stdout
+});
 
 let base_url = "https://www.amazon.in/Vivo-Electric-Charge-Battery-Storage/product-reviews/B07DJD1RTM/";
 
@@ -17,10 +23,15 @@ function preprocess(html) {
 	return html.replace(/<br>|<\/br>|<br\/>/g, "\n");
 }
 
-async function scrape() {
+async function scrape(url) {
+
+	let url_parts = url.split('/');
+	let product_id = url_parts[4] == "dp" ? url_parts[5] : url_parts[4]
+	let base_url = "https://www.amazon.in/product-reviews/" + product_id + "/?pageSize=20";
+	let filename = product_id + ".csv";
 
 	let reviews = [];
-	
+
 	while (true) {
 		let response = await axios.get(base_url);
 
@@ -54,10 +65,10 @@ async function scrape() {
 
 		// Writing to File
 		let reviews_csv = stringify(reviews);
-		fs.writeFileSync('data.csv', reviews_csv, { flag: 'a' });
+		fs.writeFileSync(filename, reviews_csv, { flag: 'a' });
 		reviews = [];
 
-		if(next_page == undefined || next_page == "") {
+		if (next_page == undefined || next_page == "") {
 			break;
 		} else {
 			base_url = "https://www.amazon.in" + next_page;
@@ -69,4 +80,7 @@ async function scrape() {
 
 }
 
-scrape();
+rl.question('Enter the URL of the product: ', (url) => {
+	scrape(url);
+	rl.close();
+});

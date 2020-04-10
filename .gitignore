@@ -1,3 +1,5 @@
 node_modules/
 scraped/
 test.js
+amazon-web-scraper.zip
+*.csv
