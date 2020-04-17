@@ -9,8 +9,6 @@ const rl = readline.createInterface({
 	output: process.stdout
 });
 
-let base_url = "https://www.amazon.in/Vivo-Electric-Charge-Battery-Storage/product-reviews/B07DJD1RTM/";
-
 axios.defaults.headers.common['User-Agent'] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:73.0) Gecko/20100101 Firefox/73.0";
 
 function wait(ms) {
